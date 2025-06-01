@@ -1,0 +1,23 @@
+# Ignora archivos privados de configuración de NetBeans
+nbproject/private/
+
+# Ignora directorios de compilación
+build/
+dist/
+
+# Archivos generados y temporales
+*.class
+*.log
+*.bak
+*.swp
+
+# Configuración de IDEs (por si acaso alguien usa otro IDE)
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+# 
