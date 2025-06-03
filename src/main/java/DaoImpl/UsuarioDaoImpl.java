@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +25,8 @@ public class UsuarioDaoImpl {
 
     public int Agrear(Usuario obj) {
         try {
-            PreparedStatement preparo = Conexion.getConexion().prepareStatement("INSERT INTO `usuario`(`email`, `rol`) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparo = Conexion.getConexion().prepareStatement(
+                    "INSERT INTO `usuario`(`email`, `rol`) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
             preparo.setString(1, obj.getEmail());
             preparo.setString(2, obj.getRol());
 
@@ -42,8 +45,7 @@ public class UsuarioDaoImpl {
     public void Eliminar(int id) {
         try {
             PreparedStatement ps = Conexion.getConexion().prepareStatement(
-                    "DELETE FROM usuario WHERE usuario_id = ?"
-            );
+                    "DELETE FROM usuario WHERE usuario_id = ?");
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -65,33 +67,35 @@ public class UsuarioDaoImpl {
         }
         return false;
     }
-    
-    public ArrayList<String> arregloRol(int idUsuario){
-    
+
+    public ArrayList<String> arregloRol(int idUsuario) {
+
         ArrayList<String> listaRol = new ArrayList<>();
-        
+
         String sql = "SELECT rol FROM empresa WHERE usuario_id = ?";
-        
-        try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)){
-            
+
+        try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 String rol = rs.getString("rol");
                 listaRol.add(rol);
-           }           
+            }
         } catch (Exception e) {
             System.out.println("Error al obtener los roles: " + e.getMessage());
-        } 
+        }
         return listaRol;
     }
 
-    public void InsertarLogin(int idUsuario){
+    public void InsertarLogin(int idUsuario) {
         try {
+            String fechaHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"));
+            String idInicioSesion = fechaHora + idUsuario;
             PreparedStatement ps = Conexion.getConexion().prepareStatement(
-                    "INSERT INTO `inicios_sesion`(`id_usuario`) VALUES (?)"
-            );
-            ps.setInt(1, idUsuario);
+                    "INSERT INTO `inicios_sesion`(`id_inicio_sesion`, `id_usuario`) VALUES (?, ?)");
+            ps.setString(1, idInicioSesion);
+            ps.setInt(2, idUsuario);
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error al insertar en la tabla login: " + ex.getMessage());
