@@ -41,6 +41,7 @@ public class EmpresaDaoImpl {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Empresa empresa = new Empresa();
+                empresa.setId_empresa(rs.getInt("empresa_id"));
                 empresa.setNombre_emp(rs.getString("nombre_marca"));
                 empresa.setRuc_emp(rs.getString("ruc"));
                 empresa.setRazon_social(rs.getString("razon_social_anterior"));

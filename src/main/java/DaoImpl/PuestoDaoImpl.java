@@ -48,6 +48,24 @@ public class PuestoDaoImpl {
         return lista;
         
     }
+
+    public boolean insertar(oferta_practica oferta) {
+        String sql = "INSERT INTO `oferta_practica`(`empresa_id`, `titulo`, `descripcion`, `requisitos`, `vacantes_disponibles`, `fecha_limite`) VALUES (?,?,?,?,?,?)";
+        try {
+            Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, oferta.getId_empresa());
+            ps.setString(2, oferta.getTitulo());
+            ps.setString(3, oferta.getDescripcion());
+            ps.setString(4, oferta.getRequisitos());
+            ps.setInt(5, oferta.getVacantes());
+            ps.setString(6, oferta.getFecha_limite());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
     
     
